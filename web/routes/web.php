@@ -18,6 +18,7 @@ use Shopify\Exception\InvalidWebhookException;
 use Shopify\Utils;
 use Shopify\Webhooks\Registry;
 use Shopify\Webhooks\Topics;
+use App\Http\Controllers\QrCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,3 +144,5 @@ Route::post('/api/webhooks', function (Request $request) {
         return response()->json(['message' => "Got an exception when handling '$topic' webhook"], 500);
     }
 });
+
+Route::get('/api/csrf-token', fn () => ['csrf_token' => csrf_token()]);
