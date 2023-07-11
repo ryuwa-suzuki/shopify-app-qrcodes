@@ -2,7 +2,7 @@
 /web/public/hot
 /web/public/storage
 /web/storage/*.key
-/web/storage/db.sqlite
+/web/storage/db.sqlite*
 /web/vendor
 /web/composer.lock
 .env
