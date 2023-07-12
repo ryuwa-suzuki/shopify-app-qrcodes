@@ -24,7 +24,6 @@ export default function QRCodeEdit() {
       refetchOnReconnect: false,
     },
   });
-  ノート
 
   /* Loading action and markup that uses App Bridge and Polaris components */
   if (isLoading || isRefetching) {
