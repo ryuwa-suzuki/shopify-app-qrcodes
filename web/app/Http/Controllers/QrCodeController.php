@@ -123,6 +123,12 @@ class QrCodeController extends Controller
         }
     }
 
+    /**
+     * update QR code record.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update (Request $request, $id)
     {
         $response = $code = null;
@@ -141,7 +147,7 @@ class QrCodeController extends Controller
             $code = 500;
             $response = $e->getMessage();
 
-            Log::error("Failed to index qrcodes: $response");
+            Log::error("Failed to update qrcodes: $response");
 
         } finally {
             return response()->json($response, $code);
@@ -149,9 +155,9 @@ class QrCodeController extends Controller
     }
 
     /**
-     * get List QR code record.
+     * get QR code record by id.
      *
-     * @param  Request  $request
+     * @param  int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show ($id)
@@ -165,9 +171,9 @@ class QrCodeController extends Controller
     }
 
     /**
-     * get List QR code record.
+     * delete QR code record.
      *
-     * @param  Request  $request
+     * @param  int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete ($id)
@@ -180,6 +186,12 @@ class QrCodeController extends Controller
         }
     }
 
+    /**
+     * ディスカウントをshopifyから取得
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getDisCounts(Request $request)
     {
         $session = $request->get('shopifySession');
@@ -206,6 +218,6 @@ class QrCodeController extends Controller
 
     private function __generateQrcodeImageUrl($qrCode)
     {
-        return Context::$HOST_SCHEME.'://'.Context::$HOST_NAME.'/qrcodes/'.$qrCode['id'].'/scan';
+        return Context::$HOST_SCHEME.'://'.Context::$HOST_NAME.'/qrcodes/'.$qrCode['id'].'/image';
     }
 }
