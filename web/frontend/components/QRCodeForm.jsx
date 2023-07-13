@@ -63,7 +63,6 @@ export function QRCodeForm({ QRCode: InitialQRCode }) {
         const method = QRCodeId ? "PATCH" : "POST";
         /* use (authenticated) fetch from App Bridge to send the request to the API and, if successful, clear the form to reset the ContextualSaveBar and parse the response JSON */
         const csrfToken = await csrf();
-        console.log(csrfToken)
         const response = await fetch(url, {
           method,
           body: JSON.stringify(parsedBody),
@@ -184,8 +183,24 @@ export function QRCodeForm({ QRCode: InitialQRCode }) {
 
     It will be replaced by a different function when the frontend is connected to the backend.
   */
-  const isDeleting = false;
-  const deleteQRCode = () => console.log("delete");
+    const [isDeleting, setIsDeleting] = useState(false);
+    const deleteQRCode = useCallback(async () => {
+      reset();
+      /* The isDeleting state disables the download button and the delete QR code button to show the user that an action is in progress */
+      setIsDeleting(true);
+      const csrfToken = await csrf();
+      const response = await fetch(`/api/qrcodes/${QRCode.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          'X-CSRF-TOKEN': csrfToken
+        },
+      });
+
+      if (response.ok) {
+        navigate(`/`);
+      }
+    }, [QRCode]);
 
 
   /*
@@ -195,9 +210,32 @@ export function QRCodeForm({ QRCode: InitialQRCode }) {
 
     For now, it contains only the default value.
   */
-  const shopData = null;
-  const isLoadingShopData = true;
-  const discountOptions = [NO_DISCOUNT_OPTION];
+  const {
+    data: shopData,
+    isLoading: isLoadingShopData,
+    isError: shopDataError,
+    /* useAppQuery makes a query to `/api/shop-data`, which the backend authenticates before fetching the data from the Shopify GraphQL Admin API */
+  } = useAppQuery({ url: "/api/shop-data" });
+
+  /*
+    This array is used in a select field in the form to manage discount options
+  */
+  const discountOptions = shopData
+    ? [
+        NO_DISCOUNT_OPTION,
+        ...shopData.codeDiscountNodes.edges.map(
+          ({ node: { id, codeDiscount } }) => {
+            DISCOUNT_CODES[id] = codeDiscount.codes.edges[0].node.code;
+
+            return {
+              label: codeDiscount.codes.edges[0].node.code,
+              value: id,
+            };
+          }
+        ),
+      ]
+    : [];
+
 
 
   /*
