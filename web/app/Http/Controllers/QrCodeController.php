@@ -78,8 +78,7 @@ class QrCodeController extends Controller
         try {
             $rowCodeData = [];
             $code = 201;
-            // $rowCodeData[] = QrCode::create($qrCodes)->toArray();
-            $rowCodeData[] = QrCode::find(1)->toArray();
+            $rowCodeData[] = QrCode::create($qrCodes)->toArray();
             $response = $this->qrCodeHelper->formatQrCodeResponse($rowCodeData)[0];
 
         } catch (\Exception $e) {
@@ -165,6 +164,7 @@ class QrCodeController extends Controller
         $qrCode = $this->qrCodeHelper->getQrCodeOr404($id);
         if ($qrCode) {
             $code = 200;
+            $this->__addImageUrl($qrCode);
             $response = $this->qrCodeHelper->formatQrCodeResponse([$qrCode->toArray()])[0];
             return response()->json($response, $code);
         }
