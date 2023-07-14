@@ -418,7 +418,7 @@ export function QRCodeForm({ QRCode: InitialQRCode }) {
         <Layout.Section secondary>
           <Card sectioned title="QR code">
             {QRCode ? (
-              <EmptyState imageContained={true} image={QRCodeURL} />
+                <EmptyState fullWidth={true} image={QRCodeURL} />
             ) : (
               <EmptyState>
                 <p>Your QR code will appear here after you save.</p>
