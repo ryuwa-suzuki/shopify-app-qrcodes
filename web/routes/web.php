@@ -19,6 +19,7 @@ use Shopify\Utils;
 use Shopify\Webhooks\Registry;
 use Shopify\Webhooks\Topics;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\QrCodePublicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -146,3 +147,15 @@ Route::post('/api/webhooks', function (Request $request) {
 });
 
 Route::get('/api/csrf-token', fn () => ['csrf_token' => csrf_token()]);
+
+Route::middleware('shopify.auth')->group(function () {
+    Route::post('/api/qrcodes', [QrCodeController::class, 'create']);
+    Route::patch('/api/qrcodes/{id}', [QrCodeController::class, 'update']);
+    Route::get('/api/qrcodes/{id}', [QrCodeController::class, 'show']);
+    Route::get('/api/qrcodes', [QrCodeController::class, 'index']);
+    Route::delete('/api/qrcodes/{id}', [QrCodeController::class, 'delete']);
+    Route::get('/api/shop-data', [QrCodeController::class, 'getDisCounts']);
+});
+
+Route::get('/qrcodes/{id}/image', [QrCodePublicController::class, 'applyQrCodePublic']);
+Route::get('/qrcodes/{id}/scan', [QrCodePublicController::class, 'scan']);
