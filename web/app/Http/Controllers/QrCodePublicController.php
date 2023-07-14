@@ -22,7 +22,10 @@ class QrCodePublicController extends Controller
         $qrCode = $this->qrCodeHelper->getQrCodeOr404($id, false);
         if ($qrCode) {
             $destinationUrl = $this->__generateQrcodeDestinationUrl($qrCode);
-            $image = QrCode::size(150)->gradient(100, 100, 200, 20, 20, 100, 'vertical')->format('png')->generate($destinationUrl);
+            $image = QrCode::size(150)
+                ->gradient(rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), 'vertical')
+                ->format('png')
+                ->generate($destinationUrl);
             $headers = [
                 'Content-Type' => 'image/png',
                 'Content-Disposition' => 'inline; filename="qr_code_' . $qrCode->id . '.png"',
